@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Graphics</string>
+    <string name="button2">Построить</string>
+</resources>
