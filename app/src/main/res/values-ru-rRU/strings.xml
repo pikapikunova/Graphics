@@ -2,4 +2,13 @@
 <resources>
     <string name="app_name">Graphics</string>
     <string name="button2">Построить</string>
+    <string name="radiobutton3">Красный</string>
+    <string name="radiobutton4">Чёрный</string>
+    <string name="radiobutton5">Зелёный</string>
+    <string name="radiobutton6">Синий</string>
+    <string name="textview8">Выберите цвет графика</string>
+    <string name="textview9">Выберите цвет координатной плоскости</string>
+    <string name="textview3">Диапазон</string>
+    <string name="textview2">Выберите параметры для графика</string>
+    <string name="textview">Выберите график</string>
 </resources>

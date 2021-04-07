@@ -1,19 +1,16 @@
 package com.example.graphics
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import androidx.appcompat.app.AppCompatActivity
 import com.example.graphics.ui.main.MainFragment
 import com.example.graphics.ui.main.start_page
-import kotlinx.android.synthetic.main.main_activity.*
-import kotlinx.android.synthetic.main.main_fragment.*
-import kotlinx.android.synthetic.main.start_page_fragment.*
 
 class MainActivity : AppCompatActivity() {
 
-
+    lateinit var prefs: SharedPreferences
+    lateinit var cont: Context
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -23,9 +20,12 @@ class MainActivity : AppCompatActivity() {
                     .commitNow()
         }
 
+        prefs =
+            getSharedPreferences("settings", Context.MODE_PRIVATE)
+
     }
 
-    public fun openMainFragment()
+    fun openMainFragment()
     {
 
         var fragment = supportFragmentManager.findFragmentById (R.id.cartesianView);
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    public fun openStartFragment()
+    fun openStartFragment()
     {
         var fragment = supportFragmentManager.findFragmentById (R.id.startoff);
         val fragmentMain = supportFragmentManager.findFragmentById (R.id.secondFragment);
@@ -59,8 +59,6 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
-
-
 
 
 

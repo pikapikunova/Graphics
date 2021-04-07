@@ -1,5 +1,20 @@
 <resources>
     <string name="app_name">Graphics</string>
     <string name="button2">Build</string>
-    
+    <string name="radiobutton2" translatable="false">y^2/25-x^2/9-1</string>
+    <string name="radiobutton" translatable="false">ln(x) - 5*cos(x)</string>
+    <string name="radiobutton3">Red</string>
+    <string name="radiobutton4">Black</string>
+    <string name="radiobutton5">Green</string>
+    <string name="radiobutton6">Blue</string>
+    <string name="textview8">Choose color of graph</string>
+    <string name="textview9">Select the color of coordinate plane</string>
+    <string name="textview4" translatable="false">x1</string>
+    <string name="textview5" translatable="false">x2</string>
+    <string name="textview7" translatable="false">y2</string>
+    <string name="textview6" translatable="false">y1</string>
+    <string name="textview3">Range</string>
+    <string name="textview2">Select parameters for the graph</string>
+    <string name="textview">Select the graph</string>
+
 </resources>

@@ -6,12 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import android.widget.Button
-import com.example.graphics.R
-import com.example.graphics.ui.main.MainFragment
-import kotlinx.android.synthetic.main.main_fragment.*
-import kotlinx.android.synthetic.main.main_fragment.view.*
-import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.ln
 
@@ -19,122 +13,116 @@ class CartesianView(context : Context, attrs: AttributeSet?) : View(context, att
     constructor(context: Context) : this(context, null)
 
     val paintBG: Paint = Paint()
-    val paintLine: Paint = Paint()
+    val paintCoord: Paint = Paint()
     val paintFunc: Paint = Paint()
     val paintText: Paint = Paint()
+
+    var a: Translate = Translate(0F,1F,0F,1F,1000F,1000F)
 
     var koefx: Float? = -1F
     var koefy: Float? = -1F
 
-    var unitx: Float? = null
-    var unity: Float? = null
-
-    var xnach: Float? = null
-    var xkonech: Float? = null
-    var ynach: Float? = null
-    var ykonech: Float? = null
-
     var ind: Int = -1
 
-    var listOFFunc: List<String> =
+    var colorFunc: Int = 0xffff0000.toInt()
+    var colorCoord: Int = 0xffff0000.toInt()
+
+    val listOFFunc: List<String> =
         listOf("ln(x) - 5*cos(x)", "Math.pow(y, 2)/25-Math.pow(x, 2)/9 - 1")
 
 
-    // val koefx = a.transformationX()
-    //val koefy = a.transformationY()
 
-    init {
-        paintBG.color = 0xffffffd0.toInt()
-        paintLine.color = 0xff0000ff.toInt()
-        paintFunc.color = 0xff0000ff.toInt()
-        paintText.color = 0xff0000ff.toInt()
-        paintText.textSize = 30F
-    }
-
-    override fun setOnCreateContextMenuListener(l: OnCreateContextMenuListener?) {
-        super.setOnCreateContextMenuListener(l)
-
-    }
-
-    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.apply {
 
+            paintBG.color = 0x44ffe880
+            paintCoord.color = colorCoord
+            paintFunc.color = colorFunc
+            paintText.textSize = 30F
+            paintText.color = colorCoord
+
+
             drawPaint(paintBG)
 
-            val a = Translate(
-                xnach!!,
-                xkonech!!,
-                ynach!!,
-                ykonech!!,
-                width.toFloat(), height.toFloat()
-            )
+                a.width = width.toFloat()
+                a.height = height.toFloat()
 
-            koefx = a.transformationX()
-            koefy = a.transformationY()
+                koefx = a.transformationX()
+                koefy = a.transformationY()
 
-            unitx = a.unX()
-            unity = a.unY()
+                if (koefx != null && koefx != -1F) {
+                    drawLine(0F, koefx!!, width.toFloat(), koefx!!, paintCoord)
 
-            if (koefx != null && koefx != -1F) {
-                drawLine(0F, koefx!!, width.toFloat(), koefx!!, paintLine)
-
-                drawStrokesOnAxe(
-                    canvas,
-                    koefx!!,
-                    xnach!!,
-                    40,
-                    xkonech!!,
-                    width.toFloat(),
-                    unitx!!,
-                    true
-                )
-
-
-                if(ind == 1) {
-                    commonFun(canvas, a, paintFunc, ::funk1)
-                }
-                else
-                {
-                    commonFun(canvas, a, paintFunc, ::funk2firstPart)
-                    commonFun(canvas, a, paintFunc, ::funk2secondPart)
-                }
-
-            }
-            else {
-                if (koefx == -1F) {
-                    drawLine(
-                        0F,
-                        height.toFloat() / 2,
+                    drawStrokesOnAxe(
+                        canvas,
+                        koefx!!,
+                        a.x1,
+                        40,
+                        a.x2,
                         width.toFloat(),
-                        height.toFloat() / 2,
-                        paintLine
+                        a.unX(),
+                        true
                     )
+
+
+                    if (ind == 1) {
+                        commonFun(canvas, a, paintFunc, ::funk1)
+                    } else {
+                        commonFun(canvas, a, paintFunc, ::funk2firstPart)
+                        commonFun(canvas, a, paintFunc, ::funk2secondPart)
+                    }
+
+                } else {
+                    if (koefx == -1F) {
+                        drawLine(
+                            0F,
+                            height.toFloat() / 2,
+                            width.toFloat(),
+                            height.toFloat() / 2,
+                            paintCoord
+                        )
+                    }
+
                 }
 
+
+                if (koefy != null && koefy != -1F) {
+                    drawLine(koefy!!, 0F, koefy!!, height.toFloat(), paintCoord)
+                    drawStrokesOnAxe(
+                        canvas,
+                        koefy!!,
+                        a.y1,
+                        40,
+                        a.y2,
+                        height.toFloat(),
+                        a.unY(),
+                        false
+                    )
+                } else
+                    if (koefy == -1F)
+                        drawLine(
+                            width.toFloat() / 2,
+                            0F,
+                            width.toFloat() / 2,
+                            height.toFloat(),
+                            paintCoord
+                        )
+
+
             }
-
-
-            if (koefy != null && koefy != -1F) {
-                drawLine(koefy!!, 0F, koefy!!, height.toFloat(), paintLine)
-                drawStrokesOnAxe(canvas, koefy!!, ynach!!, 40, ykonech!!, height.toFloat(), unity!!, false)
-            } else
-                if (koefy == -1F)
-                    drawLine(width.toFloat() / 2, 0F, width.toFloat() / 2, height.toFloat(), paintLine)
-
-
-        }
-
 
     }
 
+
+
+
     @SuppressLint("WrongCall")
-    fun drawStrokesOnAxe( canvas: Canvas?, koef: Float, nach: Float, k: Int, konech: Float, size: Float, unit: Float, indikator: Boolean) {
+    fun drawStrokesOnAxe(canvas: Canvas?, koef: Float, nach: Float, k: Int, konech: Float, size: Float, unit: Float, indikator: Boolean) {
         super.onDraw(canvas)
         canvas?.apply {
 
-            var onTheAxe = 1F
+            var onTheAxe: Float
             if (indikator) {
                 onTheAxe = nach
                 drawLine(1F, koef - k, 1F, koef + k, paintText)
@@ -201,20 +189,20 @@ class CartesianView(context : Context, attrs: AttributeSet?) : View(context, att
 
             var x1 = a.x1
             var y1 = f(x1)
-            var x = a.x1 + 0.1F
+            var x = a.toDecX((a.toScrX(a.x1)!! + 1))!!
             var y2 = f(x)
             var x2 = x
-            if (a.someY(y1) != null && a.someX(x2) != null && a.someY(y2) != null) {
-                drawLine(0F, a.someY(y1)!!, a.someX(x2)!!, a.someY(y2)!!, paint)
+            if (a.toScrY(y1) != null && a.toScrX(x2) != null && a.toScrY(y2) != null) {
+                drawLine(0F, a.toScrY(y1)!!, a.toScrX(x2)!!, a.toScrY(y2)!!, paint)
             }
 
             x1 = x2
             while (x < a.x2) {
-                x += 0.1F
+                x = a.toDecX((a.toScrX(x)!! + 1))!!
                 y2 = f(x)
                 x2 = x
-                if (a.someX(x1) != null && a.someY(y1) != null && a.someX(x2) != null && a.someY(y2) != null) {
-                    drawLine(a.someX(x1)!!, a.someY(y1)!!, a.someX(x2)!!, a.someY(y2)!!, paint)
+                if (a.toScrX(x1) != null && a.toScrY(y1) != null && a.toScrX(x2) != null && a.toScrY(y2) != null) {
+                    drawLine(a.toScrX(x1)!!, a.toScrY(y1)!!, a.toScrX(x2)!!, a.toScrY(y2)!!, paint)
                 }
 
                 x1 = x2
@@ -223,6 +211,9 @@ class CartesianView(context : Context, attrs: AttributeSet?) : View(context, att
             }
         }
     }
+
+
+
 }
 
 

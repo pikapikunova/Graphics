@@ -1,8 +1,10 @@
 package com.example.graphics.ui.view
 
+import android.graphics.Canvas
+import android.graphics.Paint
 import kotlin.math.abs
 
-class Translate(var x1: Float, var x2: Float, var y1: Float, var y2: Float, val width: Float, val height: Float){
+class Translate(var x1: Float, var x2: Float, var y1: Float, var y2: Float, var width: Float, var height: Float){
 
 
     fun transformationX(): Float?{
@@ -42,7 +44,7 @@ class Translate(var x1: Float, var x2: Float, var y1: Float, var y2: Float, val 
         return width/(x2-x1)
     }
 
-    fun someY(y: Float): Float?{
+    fun toScrY(y: Float): Float?{
         //перевод в экранную систему координат
         if(y>=y1 && y<=y2)
             return(y2-y)*unY()
@@ -50,11 +52,20 @@ class Translate(var x1: Float, var x2: Float, var y1: Float, var y2: Float, val 
             return null
     }
 
-    fun someX(x: Float): Float?{
+    fun toScrX(x: Float): Float?{
         //перевод в экранную систему координат
         if(x>=x1 && x<=x2)
             return(abs(x1-x))*unX()
         else
             return null
     }
+
+    fun toDecY(y: Float) : Float?{
+        return abs(y1 - y/unY())
+    }
+
+    fun toDecX(x: Float): Float?{
+        return x1 + x/unX()
+    }
+
 }
